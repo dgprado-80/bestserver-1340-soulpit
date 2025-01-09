@@ -816,3 +816,24 @@ bool IOLoginDataSave::savePlayerStorage(const std::shared_ptr<Player> &player) {
 	}
 	return true;
 }
+bool IOLoginDataSave::savePlayerStatement(const std::shared_ptr<Player> &player, const std::string &receiver, uint16_t channelId, const std::string &text, uint32_t &statementId) {
+	if (!player) {
+		g_logger().warn("[IOLoginData::savePlayerStatement] - Player nullptr: {}", __FUNCTION__);
+		return false;
+	}
+
+	Database &db = Database::getInstance();
+	std::ostringstream query;
+
+	std::string utf8Text = convertToUTF8(text);
+	query << "INSERT INTO `player_statements` (`player_id`, `receiver`, `channel_id`, `text`, `date`) VALUES ("
+		  << player->getGUID() << ", " << db.escapeString(receiver) << ", " << channelId << ", "
+		  << db.escapeString(utf8Text) << ", " << time(nullptr) << ")";
+
+	if (!db.executeQuery(query.str())) {
+		return false;
+	}
+
+	statementId = db.getLastInsertId();
+	return true;
+}
