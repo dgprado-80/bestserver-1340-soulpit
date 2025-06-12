@@ -1500,6 +1500,11 @@ void Game::playerMoveCreature(const std::shared_ptr<Player> &player, const std::
 			return;
 		}
 
+		if (!Position::areInRange<1, 1, 0>(movingCreaturePos, player->getPosition())) {
+			player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
+			return;
+		}
+
 		if (player != movingCreature) {
 			if (toTile->hasFlag(TILESTATE_BLOCKPATH)) {
 				player->sendCancelMessage(RETURNVALUE_NOTENOUGHROOM);
@@ -1539,7 +1544,6 @@ void Game::playerMoveCreature(const std::shared_ptr<Player> &player, const std::
 		if (ret != RETURNVALUE_NOERROR) {
 			player->sendCancelMessage(ret);
 		}
-		player->setLastPosition(player->getPosition());
 	});
 }
 
