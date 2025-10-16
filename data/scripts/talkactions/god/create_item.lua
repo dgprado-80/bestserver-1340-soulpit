@@ -48,7 +48,14 @@ function createItem.onSay(player, words, param)
 				end
 			end
 
-			player:getPosition():sendMagicEffect(CONST_ME_MAGIC_GREEN)
+			if not player:isInGhostMode() then
+
+
+
+				player:getPosition():sendMagicEffect(CONST_ME_MAGIC_GREEN)
+
+
+			end
 			return true
 		elseif not itemType:isFluidContainer() then
 			local min = 100
