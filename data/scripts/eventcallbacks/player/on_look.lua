@@ -30,11 +30,9 @@ local function handleItemDescription(inspectedThing, lookDistance)
 		if itemCharges > 0 then
 			return string.format("You see %s\nIt has %d refillings left.", descriptionText, itemCharges)
 		end
-	else
-		return "You see " .. descriptionText
 	end
 
-	return descriptionText
+	return "You see " .. descriptionText
 end
 
 local function handleCreatureDescription(inspectedThing, lookDistance)
@@ -101,7 +99,10 @@ local function appendAdminDetails(descriptionText, inspectedThing, inspectedPosi
 		descriptionText = string.format("%s\nSpeed Base: %d\nSpeed: %d", descriptionText, creatureBaseSpeed, creatureCurrentSpeed)
 
 		if inspectedThing:isPlayer() then
-			descriptionText = string.format("%s\nIP: %s", descriptionText, Game.convertIpToString(inspectedThing:getIp()))
+			local playerIp = inspectedThing:getIp()
+			if playerIp and playerIp ~= 0 then
+				descriptionText = string.format("%s\nIP: %s", descriptionText, Game.convertIpToString(playerIp))
+			end
 		end
 	end
 

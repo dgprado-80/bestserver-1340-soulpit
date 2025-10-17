@@ -2150,13 +2150,17 @@ std::string Item::parseClassificationDescription(const std::shared_ptr<Item> &it
 		return "";
 	}
 
-	auto itemTier = item->getTier();
-	if (itemTier == 0) {
-		return "0";
+	const ItemType &it = Item::items[item->getID()];
+	
+	// Only show classification and tier for items that have upgradeClassification
+	if (it.upgradeClassification == 0) {
+		return "";
 	}
 
+	auto itemTier = item->getTier();
+	
 	std::string description;
-	if (Item::items[item->getID()].weaponType != WEAPON_NONE) {
+	if (it.weaponType != WEAPON_NONE) {
 		description = fmt::format(" ({:.2f}% Onslaught)", item->getFatalChance());
 	} else {
 		switch (g_game().getObjectCategory(item)) {
@@ -2177,7 +2181,7 @@ std::string Item::parseClassificationDescription(const std::shared_ptr<Item> &it
 		}
 	}
 
-	return fmt::format("{}{}", itemTier, description);
+	return fmt::format("\nClassification: {} Tier: {}{}", it.upgradeClassification, itemTier, description);
 }
 
 std::string Item::parseShowDurationSpeed(int32_t speed, bool &begin) {
